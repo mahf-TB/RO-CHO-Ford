@@ -48,6 +48,28 @@ const useStoreFlow = create<AppState>((set, get) => ({
   setEdges: (edges) => {
     set({ edges });
   },
+
+  
+  // ✅ Met à jour un nœud spécifique
+  updateNode: (id:any, newData:any) => {
+    set((state) => ({
+      nodes: state.nodes.map((node) =>
+        node.id === id ? { ...node, data: { ...node.data, ...newData } } : node
+      ),
+    }));
+  },
+
+
+   // ✅ Met à jour une arête spécifique
+   updateEdge: (id:any, newData:any) => {
+    set((state) => ({
+      edges: state.edges.map((edge) =>
+        edge.id === id ? { ...edge, ...newData } : edge
+      ),
+    }));
+  },
+
+
 }));
 
 export default useStoreFlow;

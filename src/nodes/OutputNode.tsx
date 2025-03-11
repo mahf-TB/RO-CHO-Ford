@@ -36,12 +36,12 @@ export function OutputNode({
   return (
     <div
       className={`border-2 p-5  rounded-full flex flex-col items-center ${
-        selected ? "border-blue-500" : "border-yellow-800"
+        selected ? "border-blue-500" : "border-green-600"
       }`}
       onContextMenu={handleMenuClickDroit}
     >
       {/* <span> {id}</span> */}
-      <div className=" w-20 h-20 font-bold relative rounded-full flex items-center justify-center bg-yellow-800">
+      <div className=" w-20 h-20 font-bold relative rounded-full flex items-center justify-center bg-green-600">
         {(!connection.inProgress || isTarget) && (
           <Handle
             className="customHandle"
@@ -54,14 +54,24 @@ export function OutputNode({
         {data?.beta && (
           <div className="absolute text-red-500 -top-12">ß = 54</div>
         )}
-        {data.label && <div className="text-white">{data.label}</div>}
+        {data.label && (
+          <div className="flex flex-col items-center text-white">
+            <span>
+              X<sub>{id}</sub>
+            </span>
+            <span className="text-xs text-gray-200">{data.label}</span>
+          </div>
+        )}
       </div>
 
       {/* Dropdown pour Modifier et supprimer */}
       <Dropdown open={open} setOpen={setOpen}>
-        <DropdownItems icon={<PenBox size={16} />} title="Modifier" />
         <DropdownItems
-          icon={<Trash size={16} color="red" />}
+          icon={<PenBox size={10} className="w-5 h-5" />}
+          title="Modifier"
+        />
+        <DropdownItems
+          icon={<Trash size={10} color="red" />}
           onClick={() => handleDelete(id)}
           style={"text-red-600"}
           title={"Supprimer"}

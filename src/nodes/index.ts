@@ -6,9 +6,9 @@ import { OutputNode } from "./OutputNode";
 export const initialNodes: Node[] = [
   {
     id: "1",
-    type: "custom",
+    type: "entrer",
     position: { x: 50, y: 250 },
-    data: { label: "X1" },
+    data: { label: "Debut" },
   },
 ];
 

@@ -21,7 +21,9 @@ export type AppState = {
   onConnect: OnConnect;
   setNodes: (nodes: AppNode[]) => void;
   setEdges: (edges: Edge[]) => void;
-  getOneNodeOrEdges: (id : string) => void
+  updateNode: (id: String,  newData:any) => void;
+  updateEdge: (id: String,  newData:any) => void;
+  getOneNodeOrEdges: (id : string) => any
 };
 
 

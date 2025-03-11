@@ -94,7 +94,7 @@ export const DropdownItems = ({
       >
         {icon}
         <div className="flex flex-col">
-          <div className={`${style} font-sans flex items-center font-medium`}>
+          <div className={`${style} font-sans flex items-center font-medium text-xs`}>
             {title}
           </div>
           <span className="text-xs text-gray-400">{description}</span>

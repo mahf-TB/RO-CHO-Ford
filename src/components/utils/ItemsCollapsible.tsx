@@ -10,6 +10,8 @@ import useSideStore from "@/store/sideStore";
 interface EdgeItem {
   id: string;
   label: string;
+  source:string;
+  target:string;
 }
 
 interface ItemsCollapsibleProps {
@@ -44,7 +46,7 @@ const ItemsCollapsible: React.FC<ItemsCollapsibleProps> = ({
               edges.length > 0 && isOpen ? "rotate-90" : ""
             }`}
           />
-          <span>{title}</span>
+          <span>X<sub>{id}</sub> : {title}</span>
         </div>
       </CollapsibleTrigger>
       <CollapsibleContent className="my-1">
@@ -59,7 +61,14 @@ const ItemsCollapsible: React.FC<ItemsCollapsibleProps> = ({
             }`}
           >
             <Spline className="w-3 h-3" />
-            <span className="whitespace-nowrap">{eds.id}</span>
+            <span className="whitespace-nowrap">
+             Arc  V<span className="text-xs">
+                 (X<sub>{eds.source}</sub> , X<sub>{eds.target}</sub>)
+                </span>
+              = {eds.label}
+
+
+            </span>
           </button>
         ))}
       </CollapsibleContent>

@@ -12,19 +12,23 @@ import {
   Radius,
 } from "lucide-react";
 
-
 const TopBar = () => {
   const { nodes, edges } = useStoreFlow();
-  const {sideOpen, setSideOpen } = useSideStore();
+  const { sideOpen, setSideOpen } = useSideStore();
   const onDragStart = (event: any, nodeType: any) => {
     event.dataTransfer.setData("application/reactflow", nodeType);
     event.dataTransfer.effectAllowed = "move";
   };
 
+  const findNodeExists = (typeNode: string) => {
+    const exists = nodes.some((node) => node.type === typeNode);
+    return exists;
+  };
+
   const handleMinimum = (e: any) => {
     e.preventDefault();
-    console.log(nodes);
-    console.log(edges);
+    console.log("Nodes : ", nodes);
+    console.log("Edges : ", edges);
     const valueLab = nodes.map((item) => {
       const edsValues = edges.filter((eds) => eds.source === item.id);
       return {
@@ -48,33 +52,35 @@ const TopBar = () => {
       <div className="flex items-center gap-5">
         <div className="flex items-center gap-3">
           <TooltipUtils text="Noeud">
-            <div
+            <button
               className="p-2 border flex items-center gap-2  cursor-pointer  rounded  bg-gray-200 text-gray-600 hover:bg-violet-200 hover:text-violet-500 "
               draggable
               onDragStart={(event) => onDragStart(event, "custom")}
             >
               <Diameter size={16} />
-            </div>
+            </button>
           </TooltipUtils>
 
           <TooltipUtils text="Point d'entrées">
-            <div
-              className="p-2 border flex items-center gap-2  cursor-pointer  rounded  bg-gray-200 text-gray-600 hover:bg-violet-200 hover:text-violet-500 "
-              draggable
+            <button
+              disabled={findNodeExists("entrer")}
+              className={`p-2 border flex items-center gap-2 rounded bg-gray-200 text-gray-600 hover:bg-violet-200 hover:text-violet-500 ${findNodeExists("entrer") ? "cursor-not-allowed" : "cursor-pointer"}`}
+              draggable={!findNodeExists("entrer")}
               onDragStart={(event) => onDragStart(event, "entrer")}
             >
               <Radius size={16} />
-            </div>
+            </button>
           </TooltipUtils>
 
           <TooltipUtils text="Points de sortie">
-            <div
-              className="p-2 border flex items-center gap-2  cursor-pointer  rounded  bg-gray-200 text-gray-600 hover:bg-violet-200 hover:text-violet-500 "
-              draggable
+            <button
+              disabled={findNodeExists("sortie")}
+              className={`p-2 border flex items-center gap-2 rounded bg-gray-200 text-gray-600 hover:bg-violet-200 hover:text-violet-500 ${findNodeExists("sortie") ? "cursor-not-allowed" : "cursor-pointer"}`}
+              draggable={!findNodeExists("sortie")}
               onDragStart={(event) => onDragStart(event, "sortie")}
             >
               <Radius size={16} className="rotate-180" />
-            </div>
+            </button>
           </TooltipUtils>
         </div>
         {/* Choix de l'algorithme */}
@@ -98,11 +104,11 @@ const TopBar = () => {
               onClick={() => setSideOpen(!sideOpen)}
               className="p-2 border flex items-center gap-2  cursor-pointer  rounded bg-gray-200 text-gray-600 hover:bg-violet-200 hover:text-violet-500 "
             >
-              {
-                sideOpen ? 
-                <ArrowRightFromLine size={16} /> :
+              {sideOpen ? (
+                <ArrowRightFromLine size={16} />
+              ) : (
                 <ArrowLeftFromLine size={16} />
-              }
+              )}
             </button>
           </TooltipUtils>
 

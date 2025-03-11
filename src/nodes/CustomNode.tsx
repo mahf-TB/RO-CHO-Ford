@@ -32,7 +32,6 @@ export function CustomNode({
     );
   };
 
-  
   return (
     <div
       className={`border-2 p-5  rounded-full flex flex-col items-center ${
@@ -61,14 +60,21 @@ export function CustomNode({
         {data?.beta && (
           <div className="absolute text-red-500 -top-12">ß = 54</div>
         )}
-        {data.label && <div>{data.label}</div>}
+        {data.label && (
+          <div className="flex flex-col items-center">
+            <span>
+              X<sub>{id}</sub>
+            </span>
+            <span className="text-xs text-gray-500">{data.label}</span>
+          </div>
+        )}
       </div>
 
       {/* Dropdown pour Modifier et supprimer */}
       <Dropdown open={open} setOpen={setOpen}>
-        <DropdownItems icon={<PenBox size={16} />} title="Modifier" />
+        <DropdownItems icon={<PenBox size={12} />} title="Modifier" />
         <DropdownItems
-          icon={<Trash size={16} color="red" />}
+          icon={<Trash size={12} color="red" />}
           onClick={() => handleDelete(id)}
           style={"text-red-600"}
           title={"Supprimer"}

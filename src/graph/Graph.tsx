@@ -5,15 +5,18 @@ import {
   MiniMap,
   useReactFlow,
   MarkerType,
+  Viewport,
 } from "@xyflow/react";
 
 import "@xyflow/react/dist/style.css";
 
 import { nodeTypes } from "../nodes";
 import { edgeTypes } from "../edges";
+import { updateNodesAndEdges } from "./index";
 
 import CustomConnectionLine from "./CustomConnectionLine";
 import useStoreFlow from "@/store/storeFlow";
+
 
 const connectionLineStyle = {
   stroke: "#4090F6",
@@ -29,11 +32,15 @@ const defaultEdgeOptions = {
   },
 };
 
+
+const defaultViewport: Viewport = { x: 10, y: 15, zoom: 0.7 };
+
 export default function Graph() {
   const { screenToFlowPosition } = useReactFlow();
   const { nodes, edges, setNodes, onNodesChange, onEdgesChange, onConnect } =
     useStoreFlow();
 
+    updateNodesAndEdges(nodes , edges)
   // ➕ Fonction pour ajouter un nœud après un drop
   const onDrop = (event: any) => {
     event.preventDefault();
@@ -41,6 +48,7 @@ export default function Graph() {
     const { clientX, clientY } =
       "changedTouches" in event ? event.changedTouches[0] : event;
     if (!nodeType) return;
+
     const existingIds = nodes
       .map((node) => parseInt(node.id, 10))
       .filter((id) => !isNaN(id));
@@ -54,7 +62,7 @@ export default function Graph() {
         x: clientX - 50,
         y: clientY - 50,
       }),
-      data: { label: `X${newId}` },
+      data: { label: nodeType === "sortie" ?"Sortie" :`Noeud X${newId}` },
     };
 
     setNodes([...nodes, newNode]);
@@ -81,6 +89,7 @@ export default function Graph() {
         defaultEdgeOptions={defaultEdgeOptions}
         connectionLineComponent={CustomConnectionLine}
         connectionLineStyle={connectionLineStyle}
+        defaultViewport={defaultViewport}
       >
         <Background />
         <MiniMap />
