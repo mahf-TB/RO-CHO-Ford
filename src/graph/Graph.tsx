@@ -3,27 +3,26 @@ import {
   Background,
   Controls,
   MiniMap,
-  useReactFlow,
   MarkerType,
   Viewport,
+  useReactFlow,
 } from "@xyflow/react";
 
 import "@xyflow/react/dist/style.css";
 
-import { nodeTypes } from "../nodes";
+import { createNewNode, nodeTypes } from "../nodes";
 import { edgeTypes } from "../edges";
-import { updateNodesAndEdges } from "./index";
 
 import CustomConnectionLine from "./CustomConnectionLine";
 import useStoreFlow from "@/store/storeFlow";
-
+import { updateNodesAndEdges } from ".";
 
 const connectionLineStyle = {
   stroke: "#4090F6",
   strokeWidth: 2,
 };
 
-const defaultEdgeOptions = { 
+const defaultEdgeOptions = {
   type: "floating",
   markerEnd: {
     type: MarkerType.ArrowClosed,
@@ -32,15 +31,14 @@ const defaultEdgeOptions = {
   },
 };
 
-
 const defaultViewport: Viewport = { x: 10, y: 15, zoom: 0.7 };
 
 export default function Graph() {
-  const { screenToFlowPosition } = useReactFlow();
   const { nodes, edges, setNodes, onNodesChange, onEdgesChange, onConnect } =
     useStoreFlow();
 
-    updateNodesAndEdges(nodes , edges)
+  const { screenToFlowPosition } = useReactFlow();
+  updateNodesAndEdges(nodes, edges);
   // ➕ Fonction pour ajouter un nœud après un drop
   const onDrop = (event: any) => {
     event.preventDefault();
@@ -49,23 +47,14 @@ export default function Graph() {
       "changedTouches" in event ? event.changedTouches[0] : event;
     if (!nodeType) return;
 
-    const existingIds = nodes
-      .map((node) => parseInt(node.id, 10))
-      .filter((id) => !isNaN(id));
-
-    const newId = existingIds.length > 0 ? Math.max(...existingIds) + 1 : 1;
-    // Trouver le plus grand ID existant et ajouter 1
-    const newNode = {
-      id: `${newId}`, // ID unique basé sur le max
-      type: nodeType,
-      position: screenToFlowPosition({
-        x: clientX - 50,
-        y: clientY - 50,
-      }),
-      data: { label: nodeType === "sortie" ?"Sortie" :`Noeud X${newId}` },
-    };
-
-    setNodes([...nodes, newNode]);
+    createNewNode(
+      nodes,
+      setNodes,
+      nodeType,
+      clientX,
+      clientY,
+      screenToFlowPosition
+    );
   };
 
   const onDragOver = (event: any) => {

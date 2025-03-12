@@ -4,11 +4,12 @@ import {
   useInternalNode,
 } from "@xyflow/react";
 import { getEdgeParams } from "./utils.ts";
+import useSideStore from "@/store/sideStore.ts";
 
 function FloatingEdge({ id, source, target, label, selected }: any) {
   const sourceNode = useInternalNode(source);
   const targetNode = useInternalNode(target);
-
+  const { setIdOpen } = useSideStore();
   if (!sourceNode || !targetNode) {
     return null;
   }
@@ -22,19 +23,10 @@ function FloatingEdge({ id, source, target, label, selected }: any) {
     targetY: ty,
   });
 
-  // const handleLabelChange = (edgeId: string, newLabel: string) => {
-  //   setEdges((edges) =>
-  //     edges.map((edge) =>
-  //       edge.id === edgeId ? { ...edge, label: newLabel } : edge
-  //     )
-  //   );
-  // };
-
-  
   const arrowColor = selected ? "#4090F6" : "#D2D5DB";
 
   return (
-    <g>
+    <g onClick={() => setIdOpen(id)} className="p-4 ">
       <defs>
         <marker
           id={id}
@@ -66,7 +58,7 @@ function FloatingEdge({ id, source, target, label, selected }: any) {
               color: selected ? "White" : "black",
               boxShadow: "2px 2px 5px rgba(0,0,0,0.1)",
             }}
-            className="absolute nodrag nopan text-xs font-bold p-1 rounded-4xl shadow text-white border border-gray-500"
+            className="absolute nodrag nopan text-sm font-bold p-1 px-1.5 rounded-4xl shadow text-white border border-gray-500"
           >
             {label || "56"}
           </div>

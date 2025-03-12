@@ -19,6 +19,7 @@ const TableMin = () => {
 
   return (
     <div className="flex flex-col h-screen overflow-hidden">
+    
       <div ref={tableBodyRef} className="w-full overflow-y-auto flex-grow">
         <section className="container mx-auto p-6 font-sans">
           <div className="w-full overflow-hidden ">
@@ -44,7 +45,7 @@ const TableMin = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white">
-                  {Array.from({ length: 100 }).map((_, index) => (
+                  {Array.from({ length: 10 }).map((_, index) => (
                     <RowsTable
                       key={index}
                       i={index + 1}

@@ -12,11 +12,12 @@ import Graph from "./graph/Graph";
 import SideBar from "./components/barre/SideBar";
 import useSideStore from "./store/sideStore";
 import TableMin from "./components/barre/TableMin";
+import { X } from "lucide-react";
 
 export default function App() {
-  const { sideOpen } = useSideStore();
+  const { sideOpen, logOpen, setLogOpen } = useSideStore();
   return (
-    <ReactFlowProvider >
+    <ReactFlowProvider>
       <AnimatePresence>
         <div className="h-full overflow-hidden">
           {/* top bar */}
@@ -24,23 +25,38 @@ export default function App() {
           {/* Groupe  Resizable Parents */}
           <ResizablePanelGroup direction="horizontal">
             {/* Parents Panel 1 */}
-            <ResizablePanel defaultSize={80}>
+            <ResizablePanel defaultSize={85}>
               {/* Groupe  Resizable Fils */}
               <ResizablePanelGroup direction="vertical">
                 {/* Fils Panel 1 */}
-                <ResizablePanel defaultSize={80}>
+                <ResizablePanel defaultSize={logOpen ? 100 : 80}>
+                  <div className={logOpen ? "h-full" : "h-[calc(100%-55px)]"}>
                     <Graph />
-                </ResizablePanel>
-
-                <ResizableHandle withHandle />
-                {/* Fils Panel 2 */}
-                <ResizablePanel defaultSize={20} minSize={30} className="bg-black/70">
-                  <div className="mt-1 bg-violet-50 ">
-                    <TableMin />
                   </div>
                 </ResizablePanel>
+                <ResizableHandle withHandle className="bg-violet-400 " />
+
+                {/* Fils Panel 2 */}
+               
+                {logOpen && (
+                  <ResizablePanel defaultSize={30 } minSize={30} >
+                    <div className="h-5 bg-violet-200 border-b border-violet-400 flex items-center justify-between px-5">
+                      <span className="text-xs uppercase text-violet-600 font-semibold">Calcul pour trouver le chemin</span>
+                      <button
+                        onClick={() => setLogOpen(false)}
+                        className="flex items-center justify-center gap-2 text-xs cursor-pointer hover:bg-gray-100 rounded"
+                      >
+                        <X size={16} />
+                      </button>
+                    </div>
+                    <div className="bg-violet-50 ">
+                      <TableMin />
+                    </div>
+                  </ResizablePanel>
+                )}
               </ResizablePanelGroup>
             </ResizablePanel>
+            <ResizableHandle  className="bg-violet-400" />
             {/* Parents Panel 2 */}
             {/* {sideOpen && ( */}
             <motion.div

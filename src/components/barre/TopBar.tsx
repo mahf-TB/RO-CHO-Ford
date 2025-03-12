@@ -3,18 +3,24 @@ import TooltipUtils from "@/components/utils/TooltipUtils";
 import useSideStore from "@/store/sideStore";
 import useStoreFlow from "@/store/storeFlow";
 import {
-  ArrowLeftFromLine,
-  ArrowRightFromLine,
+  ChevronDown,
   ChevronRight,
   Diameter,
-  Ellipsis,
+  Maximize,
+  Minimize,
   Play,
   Radius,
+  SidebarClose,
+  SidebarOpen,
+  TableRowsSplitIcon,
 } from "lucide-react";
+import Dropdown, { DropdownItems } from "../utils/Dropdown";
+import { useState } from "react";
 
 const TopBar = () => {
   const { nodes, edges } = useStoreFlow();
-  const { sideOpen, setSideOpen } = useSideStore();
+  const { sideOpen, setSideOpen, logOpen, setLogOpen } = useSideStore();
+  const [typeAlgo, setTypeAlgo] = useState("");
   const onDragStart = (event: any, nodeType: any) => {
     event.dataTransfer.setData("application/reactflow", nodeType);
     event.dataTransfer.effectAllowed = "move";
@@ -64,7 +70,11 @@ const TopBar = () => {
           <TooltipUtils text="Point d'entrées">
             <button
               disabled={findNodeExists("entrer")}
-              className={`p-2 border flex items-center gap-2 rounded bg-gray-200 text-gray-600 hover:bg-violet-200 hover:text-violet-500 ${findNodeExists("entrer") ? "cursor-not-allowed" : "cursor-pointer"}`}
+              className={`p-2 border flex items-center gap-2 rounded bg-gray-200 text-gray-600 hover:bg-violet-200 hover:text-violet-500 ${
+                findNodeExists("entrer")
+                  ? "cursor-not-allowed"
+                  : "cursor-pointer"
+              }`}
               draggable={!findNodeExists("entrer")}
               onDragStart={(event) => onDragStart(event, "entrer")}
             >
@@ -75,7 +85,11 @@ const TopBar = () => {
           <TooltipUtils text="Points de sortie">
             <button
               disabled={findNodeExists("sortie")}
-              className={`p-2 border flex items-center gap-2 rounded bg-gray-200 text-gray-600 hover:bg-violet-200 hover:text-violet-500 ${findNodeExists("sortie") ? "cursor-not-allowed" : "cursor-pointer"}`}
+              className={`p-2 border flex items-center gap-2 rounded bg-gray-200 text-gray-600 hover:bg-violet-200 hover:text-violet-500 ${
+                findNodeExists("sortie")
+                  ? "cursor-not-allowed"
+                  : "cursor-pointer"
+              }`}
               draggable={!findNodeExists("sortie")}
               onDragStart={(event) => onDragStart(event, "sortie")}
             >
@@ -85,18 +99,42 @@ const TopBar = () => {
         </div>
         {/* Choix de l'algorithme */}
         <div className="flex items-center gap-10">
-          <TooltipUtils text="Executer l'algorithme">
-            <div className="flex">
+          <div className="flex">
+            <TooltipUtils text="Executer l'algorithme">
               <button
                 onClick={handleMinimum}
                 className="px-4  py-1 flex items-center gap-1  cursor-pointer  rounded-l  bg-violet-500 text-white hover:bg-violet-500/90 "
               >
-                <Play size={16} /> Executer
+                <Play size={16} /> {typeAlgo ? typeAlgo : "Executer"}
               </button>
-              <button className="p-2 border flex items-center gap-2  cursor-pointer  rounded-r  bg-gray-200 text-gray-600 hover:bg-violet-200 hover:text-violet-500 ">
-                <Ellipsis size={16} />
-              </button>
-            </div>
+            </TooltipUtils>
+            <Dropdown
+              btnShow={
+                <span className="p-2 border flex items-center gap-2  cursor-pointer  rounded-r  bg-gray-200 text-gray-600 hover:bg-violet-200 hover:text-violet-500 ">
+                  <ChevronDown size={16} />
+                </span>
+              }
+            >
+              <DropdownItems
+                icon={<Minimize size={12} />}
+                onClick={() => setTypeAlgo("Minimisation")}
+                title="Minimisation"
+              />
+              <DropdownItems
+                icon={<Maximize size={12} />}
+                onClick={() => setTypeAlgo("Maximisation")}
+                title="Maximisation"
+              />
+            </Dropdown>
+          </div>
+
+          <TooltipUtils text="Affichage">
+            <button
+              onClick={() => setLogOpen(!logOpen)}
+              className="p-2 border flex items-center gap-2  cursor-pointer  rounded  bg-gray-200 text-gray-600 hover:bg-violet-200 hover:text-violet-500 "
+            >
+              <TableRowsSplitIcon size={16} />
+            </button>
           </TooltipUtils>
 
           <TooltipUtils text="Fermer le sidebar">
@@ -105,9 +143,9 @@ const TopBar = () => {
               className="p-2 border flex items-center gap-2  cursor-pointer  rounded bg-gray-200 text-gray-600 hover:bg-violet-200 hover:text-violet-500 "
             >
               {sideOpen ? (
-                <ArrowRightFromLine size={16} />
+                <SidebarOpen size={16} />
               ) : (
-                <ArrowLeftFromLine size={16} />
+                <SidebarClose size={16} />
               )}
             </button>
           </TooltipUtils>

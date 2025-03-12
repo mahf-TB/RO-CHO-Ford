@@ -9,6 +9,7 @@ import { type PositionLoggerNode } from "./types";
 import Dropdown, { DropdownItems } from "@/components/utils/Dropdown";
 import { useState } from "react";
 import { PenBox, Trash } from "lucide-react";
+import useSideStore from "@/store/sideStore";
 
 export function CustomNode({
   data,
@@ -17,6 +18,7 @@ export function CustomNode({
 }: NodeProps<PositionLoggerNode>) {
   const connection = useConnection();
   const { getNodes, setNodes, getEdges, setEdges } = useReactFlow();
+  const {  setIdOpen } = useSideStore();
   const [open, setOpen] = useState(false);
   const isTarget = connection.inProgress && connection.fromNode.id !== id;
 
@@ -38,6 +40,7 @@ export function CustomNode({
         selected ? "border-blue-500" : "border-gray-300"
       }`}
       onContextMenu={handleMenuClickDroit}
+      onClick={()=> setIdOpen(id) }
     >
       {/* <span> {id}</span> */}
       <div className=" w-20 h-20 font-bold relative rounded-full flex items-center justify-center bg-gray-300">

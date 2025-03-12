@@ -21,15 +21,16 @@ export type AppState = {
   onConnect: OnConnect;
   setNodes: (nodes: AppNode[]) => void;
   setEdges: (edges: Edge[]) => void;
-  updateNode: (id: String,  newData:any) => void;
-  updateEdge: (id: String,  newData:any) => void;
-  getOneNodeOrEdges: (id : string) => any
+  updateNode: (id: String, newData: any) => void;
+  updateEdge: (id: String, newData: any) => void;
+  getOneNodeOrEdges: (id: string) => any;
 };
-
 
 export type SideStoreState = {
   idOpen: string;
   sideOpen: boolean;
+  logOpen: boolean;
   setIdOpen: (idOpen: string) => void;
   setSideOpen: (sideOpen: boolean) => void;
+  setLogOpen: (logOpen: boolean) => void;
 };
