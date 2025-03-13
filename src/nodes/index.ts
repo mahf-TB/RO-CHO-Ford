@@ -34,7 +34,7 @@ export const createNewNode = (
           ? "Sortie"
           : nodeType === "entrer"
           ? "Debut"
-          : `Noeud X${newId}`,
+          : `Noeud ${newId}`,
     },
   };
 

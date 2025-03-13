@@ -16,11 +16,13 @@ import {
 } from "lucide-react";
 import Dropdown, { DropdownItems } from "../utils/Dropdown";
 import { useState } from "react";
+import { bellmanFord } from "@/scripts/AlgorithmeFord";
 
 const TopBar = () => {
-  const { nodes, edges } = useStoreFlow();
-  const { sideOpen, setSideOpen, logOpen, setLogOpen } = useSideStore();
+  const { nodes, edges, updateNode } = useStoreFlow();
+  const { sideOpen, setSideOpen, logOpen, setLogOpen , setResTable} = useSideStore();
   const [typeAlgo, setTypeAlgo] = useState("");
+
   const onDragStart = (event: any, nodeType: any) => {
     event.dataTransfer.setData("application/reactflow", nodeType);
     event.dataTransfer.effectAllowed = "move";
@@ -33,16 +35,12 @@ const TopBar = () => {
 
   const handleMinimum = (e: any) => {
     e.preventDefault();
-    console.log("Nodes : ", nodes);
-    console.log("Edges : ", edges);
-    const valueLab = nodes.map((item) => {
-      const edsValues = edges.filter((eds) => eds.source === item.id);
-      return {
-        ...item,
-        edsValues,
-      };
-    });
-    console.log(valueLab);
+    const resMini = bellmanFord(nodes, edges, "1");
+    for (let i = 1; i <= nodes.length; i++) {
+      const lamdda = resMini.lambda
+      updateNode(i.toString(), { lambda: lamdda[i] });
+    }
+    setResTable(resMini.results)
   };
 
   return (

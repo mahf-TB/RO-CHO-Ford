@@ -52,8 +52,9 @@ const SideBar = () => {
   return (
     <div className="border-l h-screen bg-violet-50 border-violet-400">
       <ResizablePanelGroup direction="vertical">
-        <ResizablePanel defaultSize={50}>
-          <div className="space-y-2 p-2 overflow-y-scroll  mb-16 h-screen">
+        <ResizablePanel defaultSize={60}>
+        <div className="flex flex-col h-screen ">
+          <div className="space-y-2 p-2  overflow-y-auto  mb-16 ">
             {nodesWithEdges.map((node , i) => (
               <div key={i}>
                 <ItemsCollapsible
@@ -63,12 +64,14 @@ const SideBar = () => {
                 />
               </div>
             ))}
+            <div className="h-[40vh]"></div>
+          </div>
           </div>
         </ResizablePanel>
 
         <ResizableHandle withHandle className="bg-violet-400 " />
 
-        <ResizablePanel defaultSize={50}>
+        <ResizablePanel defaultSize={40} maxSize={50}>
           <div className="h-full p-2 my-4">
             <div>
               {data?.type === "floating" ? (

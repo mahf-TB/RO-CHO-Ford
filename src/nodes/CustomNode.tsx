@@ -18,7 +18,7 @@ export function CustomNode({
 }: NodeProps<PositionLoggerNode>) {
   const connection = useConnection();
   const { getNodes, setNodes, getEdges, setEdges } = useReactFlow();
-  const {  setIdOpen } = useSideStore();
+  const { setIdOpen } = useSideStore();
   const [open, setOpen] = useState(false);
   const isTarget = connection.inProgress && connection.fromNode.id !== id;
 
@@ -40,7 +40,7 @@ export function CustomNode({
         selected ? "border-blue-500" : "border-gray-300"
       }`}
       onContextMenu={handleMenuClickDroit}
-      onClick={()=> setIdOpen(id) }
+      onClick={() => setIdOpen(id)}
     >
       {/* <span> {id}</span> */}
       <div className=" w-20 h-20 font-bold relative rounded-full flex items-center justify-center bg-gray-300">
@@ -60,8 +60,10 @@ export function CustomNode({
           />
         )}
 
-        {data?.beta && (
-          <div className="absolute text-red-500 -top-12">ß = 54</div>
+        {data.lambda && (
+          <div className="absolute text-red-500 -top-12">
+            λ<sub>{id}</sub> = {data.lambda}
+          </div>
         )}
         {data.label && (
           <div className="flex flex-col items-center">

@@ -1,16 +1,17 @@
+import useSideStore from "@/store/sideStore";
 import { useEffect, useRef } from "react";
 
 type RowsTableProps = {
-  i: number;
-  j: number;
+  i: string;
+  j: string;
   lambdaI: number;
   lambdaJ: number;
   vArc: number;
 };
 
 const TableMin = () => {
+  const { resTable } = useSideStore();
   const tableBodyRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     if (tableBodyRef.current) {
       tableBodyRef.current.scrollTop = tableBodyRef.current.scrollHeight;
@@ -19,7 +20,6 @@ const TableMin = () => {
 
   return (
     <div className="flex flex-col h-screen overflow-hidden">
-    
       <div ref={tableBodyRef} className="w-full overflow-y-auto flex-grow">
         <section className="container mx-auto p-6 font-sans">
           <div className="w-full overflow-hidden ">
@@ -45,18 +45,23 @@ const TableMin = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white">
-                  {Array.from({ length: 10 }).map((_, index) => (
+                  {resTable.map((item, index) => (
                     <RowsTable
                       key={index}
-                      i={index + 1}
-                      j={index + 2}
-                      lambdaI={0}
-                      lambdaJ={Infinity}
-                      vArc={0}
+                      i={item.i}
+                      j={item.j}
+                      lambdaI={item.lambdaI}
+                      lambdaJ={item.lambdaJ}
+                      vArc={item.vArc}
                     />
                   ))}
                   <tr>
-                    <td colSpan={5} className="h-[80vh] bg-violet-50"></td>
+                    <td colSpan={5} className="h-[80vh] bg-violet-50 ">
+                      <div className="flex items-start h-full justify-center text-sm text-gray-500 mt-5">
+                        {resTable.length > 0
+                         && `Affichage de ${resTable.length} lignes`}
+                      </div>
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -95,21 +100,24 @@ export const RowsTable: React.FC<RowsTableProps> = ({
       </td>
       <td className="px-4 py-2 border border-black text-center">{vArc}</td>
       <td className="px-4 py-2 border border-black">
-        <div className="flex items-center gap-2 ">
-          <span>
-            λ<sub>{j}</sub>
-          </span>
-          =
-          <span>
-            λ<sub>{i}</sub> + V(X<sub>{j}</sub>, X<sub>{i}</sub>)
-          </span>
-          =
-          <span>
-            {lambdaI} + {vArc}
-          </span>
-          = 
-          <span>{lambdaI + vArc}</span>
-        </div>
+        {lambdaJ - lambdaI > vArc ? (
+          <div className="flex items-center gap-2 ">
+            <span>
+              λ<sub>{j}</sub>
+            </span>
+            =
+            <span>
+              λ<sub>{i}</sub> + V(X<sub>{j}</sub>, X<sub>{i}</sub>)
+            </span>
+            =
+            <span>
+              {lambdaI} + {vArc}
+            </span>
+            =<span>{lambdaI + vArc}</span>
+          </div>
+        ) : (
+          "Aucun"
+        )}
       </td>
     </tr>
   );

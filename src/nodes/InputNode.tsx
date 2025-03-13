@@ -18,7 +18,7 @@ export function InputNode({
 }: NodeProps<PositionLoggerNode>) {
   const connection = useConnection();
   const { getNodes, setNodes, getEdges, setEdges } = useReactFlow();
-  const {  setIdOpen } = useSideStore();
+  const { setIdOpen } = useSideStore();
   const [open, setOpen] = useState(false);
 
   const handleMenuClickDroit = (e: any) => {
@@ -39,7 +39,7 @@ export function InputNode({
         selected ? "border-blue-500" : "border-yellow-300"
       }`}
       onContextMenu={handleMenuClickDroit}
-      onClick={()=> setIdOpen(id) }
+      onClick={() => setIdOpen(id)}
     >
       {/* <span> {id}</span> */}
       <div className=" w-20 h-20 font-bold relative rounded-full flex items-center justify-center bg-yellow-500">
@@ -51,9 +51,10 @@ export function InputNode({
           />
         )}
 
-        {data?.beta && (
-          <div className="absolute text-red-500 -top-12">ß = 54</div>
-        )}
+          <div className="absolute text-red-500 -top-12">
+            λ<sub>{id}</sub> = 0
+          </div>
+    
         {data.label && (
           <div className="flex flex-col items-center text-white">
             <span>

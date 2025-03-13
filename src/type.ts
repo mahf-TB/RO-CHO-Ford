@@ -5,6 +5,7 @@ import {
   type OnEdgesChange,
   type OnConnect,
 } from "@xyflow/react";
+import { Result } from "./scripts/AlgorithmeFord";
 
 export type AppNode = Node;
 
@@ -30,6 +31,8 @@ export type SideStoreState = {
   idOpen: string;
   sideOpen: boolean;
   logOpen: boolean;
+  resTable: Result[]; 
+  setResTable: (resTable: Result[]) => void;
   setIdOpen: (idOpen: string) => void;
   setSideOpen: (sideOpen: boolean) => void;
   setLogOpen: (logOpen: boolean) => void;
