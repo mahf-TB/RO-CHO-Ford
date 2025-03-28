@@ -15,7 +15,7 @@ import { edgeTypes } from "../edges";
 
 import CustomConnectionLine from "./CustomConnectionLine";
 import useStoreFlow from "@/store/storeFlow";
-import { updateNodesAndEdges } from ".";
+// import { updateNodesAndEdges } from ".";
 
 const connectionLineStyle = {
   stroke: "#4090F6",
@@ -38,7 +38,7 @@ export default function Graph() {
     useStoreFlow();
 
   const { screenToFlowPosition } = useReactFlow();
-  updateNodesAndEdges(nodes, edges);
+  // updateNodesAndEdges(nodes, edges);
   // ➕ Fonction pour ajouter un nœud après un drop
   const onDrop = (event: any) => {
     event.preventDefault();

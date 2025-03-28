@@ -5,7 +5,7 @@ import {
   type OnEdgesChange,
   type OnConnect,
 } from "@xyflow/react";
-import { Result } from "./scripts/AlgorithmeFord";
+import { Result } from "../scripts/AlgorithmeFord";
 
 export type AppNode = Node;
 
@@ -16,6 +16,7 @@ export type NodeEdges = any & {
 export type AppState = {
   nodes: AppNode[];
   edges: Edge[];
+  editingEdgeId: string;
   nodeEdges: () => NodeEdges[];
   onNodesChange: OnNodesChange<AppNode>;
   onEdgesChange: OnEdgesChange;
@@ -25,6 +26,8 @@ export type AppState = {
   updateNode: (id: String, newData: any) => void;
   updateEdge: (id: String, newData: any) => void;
   getOneNodeOrEdges: (id: string) => any;
+  updateEdgeType: (edgeIds: string[], animated: boolean) => void;
+  setEditingEdgeId: (editingEdgeId: string) => void;
 };
 
 export type SideStoreState = {
@@ -37,3 +40,4 @@ export type SideStoreState = {
   setSideOpen: (sideOpen: boolean) => void;
   setLogOpen: (logOpen: boolean) => void;
 };
+ 

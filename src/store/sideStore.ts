@@ -1,10 +1,10 @@
-import {  SideStoreState } from "@/type";
+import {  SideStoreState } from "@/types/type";
 import { create } from "zustand";
 
 const useSideStore = create <SideStoreState> ((set) => ({
     idOpen: "",
     sideOpen:true,
-    logOpen:true,
+    logOpen:false,
     resTable: [],
     setResTable: (resTable) =>{
         set({ resTable });
@@ -18,6 +18,7 @@ const useSideStore = create <SideStoreState> ((set) => ({
     setLogOpen: (logOpen: boolean) => {
         set({ logOpen });
     },
+    
 }))
 
 export default useSideStore

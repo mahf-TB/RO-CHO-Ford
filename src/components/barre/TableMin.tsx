@@ -16,7 +16,7 @@ const TableMin = () => {
     if (tableBodyRef.current) {
       tableBodyRef.current.scrollTop = tableBodyRef.current.scrollHeight;
     }
-  }, []);
+  }, [resTable]);
 
   return (
     <div className="flex flex-col h-screen overflow-hidden">
@@ -45,21 +45,31 @@ const TableMin = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white">
-                  {resTable.map((item, index) => (
-                    <RowsTable
-                      key={index}
-                      i={item.i}
-                      j={item.j}
-                      lambdaI={item.lambdaI}
-                      lambdaJ={item.lambdaJ}
-                      vArc={item.vArc}
-                    />
-                  ))}
+                  {resTable.length === 0 ? (
+                    <tr>
+                      <td colSpan={5} className=" bg-violet-50 ">
+                        <div className="flex items-start h-full justify-center text-sm font-bold text-gray-500 my-2">
+                          Tableaux est vide...
+                        </div>
+                      </td>
+                    </tr>
+                  ) : (
+                    resTable.map((item, index) => (
+                      <RowsTable
+                        key={index}
+                        i={item.i}
+                        j={item.j}
+                        lambdaI={item.lambdaI}
+                        lambdaJ={item.lambdaJ}
+                        vArc={item.vArc}
+                      />
+                    ))
+                  )}
                   <tr>
                     <td colSpan={5} className="h-[80vh] bg-violet-50 ">
                       <div className="flex items-start h-full justify-center text-sm text-gray-500 mt-5">
-                        {resTable.length > 0
-                         && `Affichage de ${resTable.length} lignes`}
+                        {resTable.length > 0 &&
+                          `Affichage de ${resTable.length} lignes`}
                       </div>
                     </td>
                   </tr>

@@ -1,13 +1,15 @@
 import { create } from "zustand";
 import { addEdge, applyNodeChanges, applyEdgeChanges } from "@xyflow/react";
-import { AppState } from "@/type";
-import { initialNodes } from "@/nodes";
-import { initialEdges } from "@/edges";
+import { AppState } from "@/types/type";
+import { initialNodes } from "@/flows/nodes";
+import { initialEdges } from "@/flows/edges";
 
 // this is our useStore hook that we can use in our components to get parts of the store and call actions
 const useStoreFlow = create<AppState>((set, get) => ({
   nodes: initialNodes,
   edges: initialEdges,
+
+  isUpdate: false,
 
   // Fusionner nœuds et arêtes en fonction de la source
   nodeEdges: () => {
@@ -49,19 +51,17 @@ const useStoreFlow = create<AppState>((set, get) => ({
     set({ edges });
   },
 
-  
   // ✅ Met à jour un nœud spécifique
-  updateNode: (id:any, newData:any) => {
+  updateNode: (id: any, newData: any) => {
     set((state) => ({
       nodes: state.nodes.map((node) =>
-        node.id === id ? { ...node, data: { ...node.data, ...newData } } : node
+        node.id === id ? { ...node, ...newData } : node
       ),
     }));
   },
 
-
-   // ✅ Met à jour une arête spécifique
-   updateEdge: (id:any, newData:any) => {
+  // ✅ Met à jour une arête spécifique
+  updateEdge: (id: any, newData: any) => {
     set((state) => ({
       edges: state.edges.map((edge) =>
         edge.id === id ? { ...edge, ...newData } : edge
@@ -69,7 +69,18 @@ const useStoreFlow = create<AppState>((set, get) => ({
     }));
   },
 
+  updateEdgeType: (edgeIds, animated) =>
+    set((state) => ({
+      edges: state.edges.map((edge) =>
+        edgeIds.includes(edge.id)
+          ? { ...edge, animated }
+          : { ...edge, animated: false }
+      ),
+    })),
 
+
+  editingEdgeId: "", // Stocke l'ID de l'edge en cours d'édition
+  setEditingEdgeId: (edgeId) => set({ editingEdgeId: edgeId }),
 }));
 
 export default useStoreFlow;

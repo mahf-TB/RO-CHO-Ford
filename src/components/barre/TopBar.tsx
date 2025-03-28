@@ -16,11 +16,12 @@ import {
 } from "lucide-react";
 import Dropdown, { DropdownItems } from "../utils/Dropdown";
 import { useState } from "react";
-import { bellmanFord } from "@/scripts/AlgorithmeFord";
+import { bellmanFord, findShortestPathEdges } from "@/scripts/AlgorithmeFord";
 
 const TopBar = () => {
-  const { nodes, edges, updateNode } = useStoreFlow();
-  const { sideOpen, setSideOpen, logOpen, setLogOpen , setResTable} = useSideStore();
+  const { nodes, edges, updateNode, updateEdge } = useStoreFlow();
+  const { sideOpen, setSideOpen, logOpen, setLogOpen, setResTable } =
+    useSideStore();
   const [typeAlgo, setTypeAlgo] = useState("");
 
   const onDragStart = (event: any, nodeType: any) => {
@@ -35,12 +36,28 @@ const TopBar = () => {
 
   const handleMinimum = (e: any) => {
     e.preventDefault();
-    const resMini = bellmanFord(nodes, edges, "1");
+    const resMini = bellmanFord(nodes, edges, "1", updateEdge, updateNode);
+    if (!resMini) {
+      console.error("L'algorithme Bellman-Ford n'a pas retourné de résultat !");
+      return;
+    }
+
     for (let i = 1; i <= nodes.length; i++) {
-      const lamdda = resMini.lambda
+      const lamdda = resMini.lambda;
       updateNode(i.toString(), { lambda: lamdda[i] });
     }
-    setResTable(resMini.results)
+    // chercher les chemin minimale
+    findShortestPathEdges(
+      edges,
+      resMini.predecessor,
+      nodes.length.toString(),
+      "1",
+      updateEdge,
+      updateNode
+    );
+    console.log("📌 Prédécesseurs : ", resMini.predecessor);
+    // afficher dansa le tableau le calcule resultat
+    setResTable(resMini.results);
   };
 
   return (
@@ -49,7 +66,7 @@ const TopBar = () => {
         <span className="text-xs text-gray-500 flex items-center">
           <ChevronRight size={14} /> Recherche des chemin optimale
         </span>
-        <span className="font-black text-violet-800">
+        <span className="font-black  text-violet-800">
           Algorithme de BELLIMAN-FORD
         </span>
       </div>

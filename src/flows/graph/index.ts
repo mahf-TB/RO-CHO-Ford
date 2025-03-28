@@ -16,7 +16,6 @@ export const updateNodesAndEdges = (nodes: Node[], edges: Edge[]) => {
         node.id = "1";
         hasEntrerNode = true;
       } else {
-        // Si un autre nœud de type "entrer" est trouvé, le changer en un autre type
         node.type = "custom"; // ou un autre type par défaut
       }
     } else {

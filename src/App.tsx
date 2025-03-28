@@ -8,11 +8,12 @@ import {
 } from "@/components/ui/resizable";
 
 import TobBar from "./components/barre/TopBar";
-import Graph from "./graph/Graph";
+// import Graph from "./graph/Graph";
 import SideBar from "./components/barre/SideBar";
 import useSideStore from "./store/sideStore";
 import TableMin from "./components/barre/TableMin";
 import { X } from "lucide-react";
+import Graph from "./flows/graph/Graph";
 
 export default function App() {
   const { sideOpen, logOpen, setLogOpen } = useSideStore();
