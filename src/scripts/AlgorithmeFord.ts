@@ -1,3 +1,4 @@
+
 import { AppNode } from "@/types/type";
 import { type Edge } from "@xyflow/react";
 
@@ -12,15 +13,12 @@ export interface Result {
 export const bellmanFord = (
   nodes: AppNode[],
   edges: Edge[],
-  sourceId: string,
-  updateEdge: (id: string, item: any) => void,
-  updateNode: (id: string, item: any) => void
+  sourceId: string
 ) => {
   if ((nodes.length === 0, edges.length === 0)) {
     console.log(nodes.length);
     return;
   }
-
   let lambda: { [key: string]: number } = {};
   let restartNode: string | null = null;
   let predecessor: { [key: string]: string | null } = {};
@@ -29,12 +27,10 @@ export const bellmanFord = (
   // Initialisation des distances
   nodes.forEach((node) => {
     lambda[node.id] = node.id === sourceId ? 0 : Infinity;
-    updateNode(node.id, { type: "custom" });
   });
-  edges.map((item) =>
-    updateEdge(item.id, { type: "floating", animated: false })
-  );
+
   edges.sort((a, b) => parseInt(a.source) - parseInt(b.source));
+  console.log(edges);
 
   let updated = false;
   while (!updated) {
@@ -47,7 +43,7 @@ export const bellmanFord = (
     for (let i = startIndex; i < edges.length; i++) {
       const { source, target, label } = edges[i];
       if (!label) {
-        alert("Error laben non fourni");
+        alert("Error laben non fourni")
         return;
       }
       const Xi = parseInt(source, 10);
@@ -55,6 +51,7 @@ export const bellmanFord = (
       const weight = Number(label);
 
       if (lambda[Xi] !== Infinity) {
+
         results.push({
           i: source,
           j: target,
@@ -64,6 +61,7 @@ export const bellmanFord = (
         });
 
         let lambdaIJ = lambda[Xj] - lambda[Xi];
+       
 
         if (lambdaIJ > weight) {
           lambda[Xj] = lambda[Xi] + weight;
@@ -91,21 +89,25 @@ export const findShortestPathEdges = (
   edges: Edge[],
   predecessor: { [key: string]: string | null },
   targetId: string,
-  sourceId: string,
-  updateEdge: (id: string, item: any) => void,
-  updateNode: (id: string, item: any) => void
+  sourceId: string
 ) => {
+  const shortestPathEdgeIds: string[] = [];
+
   let currentId = targetId;
+
   while (currentId !== sourceId && predecessor[currentId] !== null) {
-    const prevId = predecessor[currentId] || null;  
+    const prevId = predecessor[currentId] || null;
+
     const edge = edges.find(
       (e) => e.source === prevId && e.target === currentId
     );
 
     if (edge) {
-      updateEdge(edge.id, { type: "pathaway", animated: true });
-      updateNode(currentId, { type: "greenaway" });
+      shortestPathEdgeIds.unshift(edge.id);
     }
+
     currentId = prevId!;
   }
+
+  return shortestPathEdgeIds;
 };

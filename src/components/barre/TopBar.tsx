@@ -19,7 +19,8 @@ import { useState } from "react";
 import { bellmanFord, findShortestPathEdges } from "@/scripts/AlgorithmeFord";
 
 const TopBar = () => {
-  const { nodes, edges, updateNode, updateEdge } = useStoreFlow();
+  const { nodes, edges, updateNode, updateEdgeType } =
+    useStoreFlow();
   const { sideOpen, setSideOpen, logOpen, setLogOpen, setResTable } =
     useSideStore();
   const [typeAlgo, setTypeAlgo] = useState("");
@@ -36,7 +37,8 @@ const TopBar = () => {
 
   const handleMinimum = (e: any) => {
     e.preventDefault();
-    const resMini = bellmanFord(nodes, edges, "1", updateEdge, updateNode);
+    const resMini = bellmanFord(nodes, edges, "1");
+
     if (!resMini) {
       console.error("L'algorithme Bellman-Ford n'a pas retourné de résultat !");
       return;
@@ -46,16 +48,20 @@ const TopBar = () => {
       const lamdda = resMini.lambda;
       updateNode(i.toString(), { lambda: lamdda[i] });
     }
+
+    console.log("📌 Prédécesseurs : ", resMini.predecessor);
     // chercher les chemin minimale
-    findShortestPathEdges(
+    const shortPath = findShortestPathEdges(
       edges,
       resMini.predecessor,
       nodes.length.toString(),
-      "1",
-      updateEdge,
-      updateNode
+      "1"
     );
-    console.log("📌 Prédécesseurs : ", resMini.predecessor);
+    console.log(shortPath);
+    setLogOpen(true);
+
+    updateEdgeType(shortPath, true);
+
     // afficher dansa le tableau le calcule resultat
     setResTable(resMini.results);
   };

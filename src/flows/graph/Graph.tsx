@@ -36,8 +36,9 @@ const defaultViewport: Viewport = { x: 10, y: 15, zoom: 0.7 };
 export default function Graph() {
   const { nodes, edges, setNodes, onNodesChange, onEdgesChange, onConnect } =
     useStoreFlow();
-
   const { screenToFlowPosition } = useReactFlow();
+
+  
   // updateNodesAndEdges(nodes, edges);
   // ➕ Fonction pour ajouter un nœud après un drop
   const onDrop = (event: any) => {
