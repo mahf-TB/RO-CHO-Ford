@@ -1,5 +1,7 @@
-import { AppNode } from "@/type";
+import { AppNode } from "@/types/type";
 import { type Edge } from "@xyflow/react";
+
+
 
 export interface Result {
   i: string;
@@ -9,14 +11,22 @@ export interface Result {
   vArc: number;
 }
 
-export const bellmanFord = (
+
+
+
+export const bellmanFordMinimum = (
   nodes: AppNode[],
   edges: Edge[],
   sourceId: string
 ) => {
+  if ((nodes.length === 0, edges.length === 0)) {
+    console.log(nodes.length);
+    return;
+  }
   let lambda: { [key: string]: number } = {};
-  const results: Result[] = [];
   let restartNode: string | null = null;
+  let predecessor: { [key: string]: string | null } = {};
+  const results: Result[] = [];
 
   // Initialisation des distances
   nodes.forEach((node) => {
@@ -33,29 +43,35 @@ export const bellmanFord = (
       ? edges.findIndex((e) => e.source === restartNode)
       : 0;
     restartNode = null;
-    // for (const edge of edges) {
+
     for (let i = startIndex; i < edges.length; i++) {
       const { source, target, label } = edges[i];
+      if (!label) {
+        alert("Error laben non fourni")
+        return;
+      }
       const Xi = parseInt(source, 10);
       const Xj = parseInt(target, 10);
       const weight = Number(label);
 
       if (lambda[Xi] !== Infinity) {
-        const dataTable = {
+
+        results.push({
           i: source,
           j: target,
           lambdaI: lambda[Xi],
           lambdaJ: lambda[Xj],
           vArc: weight,
-        };
+        });
 
         let lambdaIJ = lambda[Xj] - lambda[Xi];
-        results.push(dataTable);
+       
+
         if (lambdaIJ > weight) {
           lambda[Xj] = lambda[Xi] + weight;
+          predecessor[target] = source;
           updated = true;
 
-          // console.log(`✅ Update  en X${Xj}`);
           if (Xi > Xj) {
             console.log(`🔄 Recommencer la boucle en X${Xj}`);
             restartNode = target;
@@ -65,16 +81,41 @@ export const bellmanFord = (
         }
       }
     }
-
-    // if (!updated) break; // Si aucune mise à jour n'a été faite, on arrête l'algorithme
   }
 
-  console.log("✅ Résultat final de lambda:", lambda);
-  const sortie = nodes.length.toString();
-  // const path = findShortestPathEdges(results, sortie);
-  // console.log("path mini :", path);
-
-  return { lambda, results };
+  return { lambda, results, predecessor };
 };
 
 
+
+
+
+/**
+ * Trouve les arêtes du plus court chemin vers un nœud cible.
+ */
+export const findShortestPathEdges = (
+  edges: Edge[],
+  predecessor: { [key: string]: string | null },
+  targetId: string,
+  sourceId: string
+) => {
+  const shortestPathEdgeIds: string[] = [];
+
+  let currentId = targetId;
+
+  while (currentId !== sourceId && predecessor[currentId] !== null) {
+    const prevId = predecessor[currentId] || null;
+
+    const edge = edges.find(
+      (e) => e.source === prevId && e.target === currentId
+    );
+
+    if (edge) {
+      shortestPathEdgeIds.unshift(edge.id);
+    }
+
+    currentId = prevId!;
+  }
+
+  return shortestPathEdgeIds;
+};

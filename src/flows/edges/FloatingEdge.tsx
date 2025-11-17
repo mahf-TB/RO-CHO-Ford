@@ -6,7 +6,8 @@ import {
 import { getEdgeParams } from "./utils.ts";
 import useSideStore from "@/store/sideStore.ts";
 
-function FloatingEdge({ id, source, target, label, selected }: any) {
+
+function FloatingEdge({ id, source, target, label, selected  }: any) {
   const sourceNode = useInternalNode(source);
   const targetNode = useInternalNode(target);
   const { setIdOpen } = useSideStore();
@@ -14,19 +15,18 @@ function FloatingEdge({ id, source, target, label, selected }: any) {
     return null;
   }
 
-  const { sx, sy, tx, ty } = getEdgeParams(sourceNode, targetNode);
 
+  const { sx, sy, tx, ty } = getEdgeParams(sourceNode, targetNode);
   const [edgePath, labelX, labelY] = getStraightPath({
     sourceX: sx,
     sourceY: sy,
-    targetX: tx,
+    targetX: tx, 
     targetY: ty,
   });
 
   const arrowColor = selected ? "#4090F6" : "#D2D5DB";
-
   return (
-    <g onClick={() => setIdOpen(id)} className="p-4 ">
+    <g onClick={() => setIdOpen(id)} className="w-3">
       <defs>
         <marker
           id={id}
@@ -52,13 +52,13 @@ function FloatingEdge({ id, source, target, label, selected }: any) {
       <EdgeLabelRenderer>
         {label && (
           <div
+          onClick={() => setIdOpen(id)}
             style={{
               transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
               background: selected ? "#4489F6" : "white",
               color: selected ? "White" : "black",
-              boxShadow: "2px 2px 5px rgba(0,0,0,0.1)",
             }}
-            className="absolute nodrag nopan text-sm font-bold p-1 px-1.5 rounded-4xl shadow text-white border border-gray-500"
+            className="absolute nodrag nopan text-sm cursor-default font-bold p-2 px-2.5 rounded-4xl shadow text-white border border-gray-500"
           >
             {label || "56"}
           </div>

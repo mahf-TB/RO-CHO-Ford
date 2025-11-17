@@ -21,7 +21,7 @@ const SideBar = () => {
   useEffect(() => {
     if (data) {
       setDataUpdate({
-        label: data.type === "floating" ? data.label : data?.data?.label || "",
+        label: data.type === "floating" || data.type === "pathaway" ? data.label : data?.data?.label,
         id: data.id,
         type: data.type,
       });
@@ -29,10 +29,12 @@ const SideBar = () => {
   }, [idOpen, data]);
 
   const handleSave = () => {
-    if (dataUpdate.type === "floating") {
+    console.log(dataUpdate);
+    
+    if (dataUpdate.type === "floating" || dataUpdate.type === "pathaway") {
       updateEdge(data.id, { label: dataUpdate.label });
     } else {
-      updateNode(data.id, { label: dataUpdate.label });
+      updateNode(data.id, { data: { label: dataUpdate.label } });
     }
   };
 
@@ -53,19 +55,19 @@ const SideBar = () => {
     <div className="border-l h-screen bg-violet-50 border-violet-400">
       <ResizablePanelGroup direction="vertical">
         <ResizablePanel defaultSize={60}>
-        <div className="flex flex-col h-screen ">
-          <div className="space-y-2 p-2  overflow-y-auto  mb-16 ">
-            {nodesWithEdges.map((node , i) => (
-              <div key={i}>
-                <ItemsCollapsible
-                  title={`${node.data.label}`}
-                  id={node.id}
-                  edges={node.edges}
-                />
-              </div>
-            ))}
-            <div className="h-[40vh]"></div>
-          </div>
+          <div className="flex flex-col h-screen ">
+            <div className="space-y-2 p-2  overflow-y-auto  mb-16 ">
+              {nodesWithEdges.map((node, i) => (
+                <div key={i}>
+                  <ItemsCollapsible
+                    title={`${node.data.label}`}
+                    id={node.id}
+                    edges={node.edges}
+                  />
+                </div>
+              ))}
+              <div className="h-[40vh]"></div>
+            </div>
           </div>
         </ResizablePanel>
 
@@ -74,9 +76,8 @@ const SideBar = () => {
         <ResizablePanel defaultSize={40} maxSize={50}>
           <div className="h-full p-2 my-4">
             <div>
-              {data?.type === "floating" ? (
+              {data?.type === "floating" || data?.type === "pathaway" ? (
                 <>
-                  {/*  valeur de l'arc */}
                   <div>
                     <label className="block mb-1 text-xs uppercase text-slate-800">
                       Valeur de l'arc
@@ -115,7 +116,6 @@ const SideBar = () => {
                 </>
               ) : (
                 <>
-                  {/* Noeud des valeur */}
                   <div className="space-y-2">
                     <div>
                       <label className="block mb-1  text-xs uppercase text-slate-800">

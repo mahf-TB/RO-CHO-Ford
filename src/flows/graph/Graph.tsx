@@ -15,7 +15,8 @@ import { edgeTypes } from "../edges";
 
 import CustomConnectionLine from "./CustomConnectionLine";
 import useStoreFlow from "@/store/storeFlow";
-import { updateNodesAndEdges } from ".";
+import InputEdgeLabel from "../edges/InputEdgeLabel";
+// import { updateNodesAndEdges } from ".";
 
 const connectionLineStyle = {
   stroke: "#4090F6",
@@ -34,11 +35,12 @@ const defaultEdgeOptions = {
 const defaultViewport: Viewport = { x: 10, y: 15, zoom: 0.7 };
 
 export default function Graph() {
+  const { screenToFlowPosition } = useReactFlow();
   const { nodes, edges, setNodes, onNodesChange, onEdgesChange, onConnect } =
     useStoreFlow();
 
-  const { screenToFlowPosition } = useReactFlow();
-  updateNodesAndEdges(nodes, edges);
+  
+  // updateNodesAndEdges(nodes, edges);
   // ➕ Fonction pour ajouter un nœud après un drop
   const onDrop = (event: any) => {
     event.preventDefault();
@@ -46,7 +48,6 @@ export default function Graph() {
     const { clientX, clientY } =
       "changedTouches" in event ? event.changedTouches[0] : event;
     if (!nodeType) return;
-
     createNewNode(
       nodes,
       setNodes,
@@ -84,6 +85,7 @@ export default function Graph() {
         <MiniMap />
         <Controls />
       </ReactFlow>
+      <InputEdgeLabel />
     </div>
   );
 }
