@@ -34,9 +34,9 @@ const defaultEdgeOptions = {
 const defaultViewport: Viewport = { x: 10, y: 15, zoom: 0.7 };
 
 export default function Graph() {
+  const { screenToFlowPosition } = useReactFlow();
   const { nodes, edges, setNodes, onNodesChange, onEdgesChange, onConnect } =
     useStoreFlow();
-  const { screenToFlowPosition } = useReactFlow();
 
   
   // updateNodesAndEdges(nodes, edges);
@@ -47,7 +47,6 @@ export default function Graph() {
     const { clientX, clientY } =
       "changedTouches" in event ? event.changedTouches[0] : event;
     if (!nodeType) return;
-
     createNewNode(
       nodes,
       setNodes,

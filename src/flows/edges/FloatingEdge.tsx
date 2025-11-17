@@ -6,6 +6,7 @@ import {
 import { getEdgeParams } from "./utils.ts";
 import useSideStore from "@/store/sideStore.ts";
 
+
 function FloatingEdge({ id, source, target, label, selected  }: any) {
   const sourceNode = useInternalNode(source);
   const targetNode = useInternalNode(target);
@@ -14,8 +15,8 @@ function FloatingEdge({ id, source, target, label, selected  }: any) {
     return null;
   }
 
-  const { sx, sy, tx, ty } = getEdgeParams(sourceNode, targetNode);
 
+  const { sx, sy, tx, ty } = getEdgeParams(sourceNode, targetNode);
   const [edgePath, labelX, labelY] = getStraightPath({
     sourceX: sx,
     sourceY: sy,
@@ -24,7 +25,6 @@ function FloatingEdge({ id, source, target, label, selected  }: any) {
   });
 
   const arrowColor = selected ? "#4090F6" : "#D2D5DB";
-
   return (
     <g onClick={() => setIdOpen(id)} className="w-3">
       <defs>

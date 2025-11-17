@@ -82,26 +82,66 @@ export const createNewNode = (
   const existingIds = nodes
     .map((node) => parseInt(node.id, 10))
     .filter((id) => !isNaN(id));
-  const newId = existingIds.length > 0 ? Math.max(...existingIds) + 1 : 1;
-  // Trouver le plus grand ID existant et ajouter 1
-  const newNode = {
-    id: `${newId}`, // ID unique basé sur le max
-    type: nodeType,
-    position: screenToFlowPosition({
-      x: clientX - 50,
-      y: clientY - 50,
-    }),
-    data: {
-      label:
-        nodeType === "sortie"
-          ? "Sortie"
-          : nodeType === "entrer"
-          ? "Debut"
-          : `Noeud ${newId}`,
-    },
-  };
 
-  setNodes([...nodes, newNode]);
+  const newId = existingIds.length > 0 ? Math.max(...existingIds) + 1 : 1;
+
+    const newPosition = screenToFlowPosition({
+    x: clientX - 50,
+    y: clientY - 50,
+  });
+
+    // Chercher le noeud de type "sortie"
+  const sortieNodeIndex = nodes.findIndex((node) => node.type === "sortie");
+
+    // Si on ajoute un noeud qui n'est PAS "sortie" ET qu'il y a déjà une sortie
+  if (nodeType !== "sortie" && sortieNodeIndex !== -1) {
+      
+      const sortieNode = nodes[sortieNodeIndex];
+      console.log("hello :" , sortieNode);
+        // Nouveau noeud devient le type "sortie"
+    const newSortieNode = {
+      id: `${newId}`,
+      type: "sortie",
+      position: newPosition,
+      data: { label: "Sortie" },
+    };
+
+
+    // Ancien noeud "sortie" devient le nouveau type demandé
+    const updatedOldSortieNode = {
+      ...sortieNode,
+      id: `${newId - 1}`, // garde l'ancien ID ou en génère un nouveau
+      type: nodeType,
+      data: {
+        label: `Noeud ${newId - 1}`,
+      },
+    };
+
+     // Remplacer l'ancien "sortie" dans le tableau
+    const updatedNodes = [...nodes];
+    updatedNodes[sortieNodeIndex] = updatedOldSortieNode;
+
+      // Ajouter le nouveau "sortie" à la fin
+    setNodes([...updatedNodes, newSortieNode]);
+  }else{
+    // Cas normal : aucun échange, juste ajouter
+    const newNode = {
+      id: `${newId}`,
+      type: nodeType,
+      position: newPosition,
+      data: {
+        label:
+          nodeType === "sortie"
+            ? "Sortie"
+            : nodeType === "entrer"
+            ? "Début"
+            : `Noeud ${newId}`,
+      },
+    };
+
+    setNodes([...nodes, newNode]);
+  }
+
 };
 
 export const nodeTypes = {

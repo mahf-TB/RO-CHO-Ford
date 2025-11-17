@@ -19,10 +19,8 @@ import { useState } from "react";
 import { bellmanFord, findShortestPathEdges } from "@/scripts/AlgorithmeFord";
 
 const TopBar = () => {
-  const { nodes, edges, updateNode, updateEdgeType } =
-    useStoreFlow();
-  const { sideOpen, setSideOpen, logOpen, setLogOpen, setResTable } =
-    useSideStore();
+  const { nodes, edges, updateNode, updateEdgeType } = useStoreFlow();
+  const { sideOpen, setSideOpen, logOpen, setLogOpen, setResTable } = useSideStore();
   const [typeAlgo, setTypeAlgo] = useState("");
 
   const onDragStart = (event: any, nodeType: any) => {

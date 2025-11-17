@@ -1,6 +1,7 @@
-
 import { AppNode } from "@/types/type";
 import { type Edge } from "@xyflow/react";
+
+
 
 export interface Result {
   i: string;
@@ -9,6 +10,9 @@ export interface Result {
   lambdaJ: number;
   vArc: number;
 }
+
+
+
 
 export const bellmanFord = (
   nodes: AppNode[],
@@ -81,6 +85,10 @@ export const bellmanFord = (
 
   return { lambda, results, predecessor };
 };
+
+
+
+
 
 /**
  * Trouve les arêtes du plus court chemin vers un nœud cible.

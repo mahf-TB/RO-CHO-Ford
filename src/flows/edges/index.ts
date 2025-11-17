@@ -83,6 +83,7 @@ export const initialEdges: Edge[] = [
 ];
 
 
+
 /**
  * Supprime une arête spécifique.
  */
@@ -93,6 +94,6 @@ export const deleteEdge = (edgeId: string, edges: Edge[]) => {
 // Fonction pour mettre à jour le label d'un edge
 
 export const edgeTypes = {
-  floating: FloatingEdge, // Add your custom edge types here!
+  floating: FloatingEdge,
   pathaway: PathWayEdge, 
 } satisfies EdgeTypes;

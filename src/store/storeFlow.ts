@@ -9,7 +9,6 @@ import { initialEdges } from "@/flows/edges";
 const useStoreFlow = create<AppState>((set, get) => ({
   nodes: initialNodes,
   edges: initialEdges,
-
   isUpdate: false,
 
   // Fusionner nœuds et arêtes en fonction de la source
