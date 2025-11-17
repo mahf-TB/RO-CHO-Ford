@@ -1,14 +1,9 @@
 // components/EdgeLabelInput.tsx
 import { useEffect, useRef, useState } from "react";
 import {
-  getBezierPath,
-  getStraightPath,
-  Position,
-  useInternalNode,
   useReactFlow,
 } from "@xyflow/react";
 import useStoreFlow from "@/store/storeFlow";
-import { getEdgeParams } from "./utils";
 // import useStoreFlow from "@/stores/useStoreFlow";
 
 export default function InputEdgeLabel() {

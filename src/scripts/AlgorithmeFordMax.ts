@@ -111,7 +111,7 @@ export const removeCycles = (edges: Edge[]): Edge[] => {
       if (cycleEdges.length > 0) {
         // supprimer l’arête de poids minimum
         const minEdge = cycleEdges.reduce((min, e) =>
-          parseInt(e.label) < parseInt(min.label) ? e : min
+          parseInt(String(e.label)) < parseInt(String(min.label)) ? e : min
         );
         toRemove.add(minEdge.id);
       }

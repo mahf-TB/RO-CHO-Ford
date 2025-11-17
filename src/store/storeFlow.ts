@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { addEdge, applyNodeChanges, applyEdgeChanges } from "@xyflow/react";
+import { applyNodeChanges, applyEdgeChanges } from "@xyflow/react";
 import { AppState } from "@/types/type";
 import { initialNodes } from "@/flows/nodes";
 import { initialEdges } from "@/flows/edges";
