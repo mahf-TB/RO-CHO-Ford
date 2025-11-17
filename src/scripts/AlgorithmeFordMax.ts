@@ -14,7 +14,7 @@ export interface Result {
 
 
 
-export const bellmanFord = (
+export const bellmanFordMaximum = (
   nodes: AppNode[],
   edges: Edge[],
   sourceId: string
@@ -28,11 +28,13 @@ export const bellmanFord = (
   let predecessor: { [key: string]: string | null } = {};
   const results: Result[] = [];
 
+
   // Initialisation des distances
   nodes.forEach((node) => {
-    lambda[node.id] = node.id === sourceId ? 0 : Infinity;
+    lambda[node.id] = node.id === sourceId ? 0 : 0;
   });
 
+  // Trier les arêtes pour un traitement stable
   edges.sort((a, b) => parseInt(a.source) - parseInt(b.source));
   console.log(edges);
 
@@ -52,7 +54,7 @@ export const bellmanFord = (
       }
       const Xi = parseInt(source, 10);
       const Xj = parseInt(target, 10);
-      const weight = Number(label);
+      const weight = Number(label); // V(xi, xj)
 
       if (lambda[Xi] !== Infinity) {
 
@@ -64,10 +66,10 @@ export const bellmanFord = (
           vArc: weight,
         });
 
-        let lambdaIJ = lambda[Xj] - lambda[Xi];
+        let lambdaIJ = lambda[Xj] - lambda[Xi]; // (λj - λi)
        
 
-        if (lambdaIJ > weight) {
+        if (lambdaIJ < weight) { // premier modification
           lambda[Xj] = lambda[Xi] + weight;
           predecessor[target] = source;
           updated = true;
@@ -88,34 +90,53 @@ export const bellmanFord = (
 
 
 
+export const removeCycles = (edges: Edge[]): Edge[] => {
+  const graph: { [key: string]: Edge[] } = {};
 
+  // Construire l’adjacency list
+  edges.forEach(edge => {
+    if (!graph[edge.source]) graph[edge.source] = [];
+    graph[edge.source].push(edge);
+  });
 
-/**
- * Trouve les arêtes du plus court chemin vers un nœud cible.
- */
-export const findShortestPathEdges = (
-  edges: Edge[],
-  predecessor: { [key: string]: string | null },
-  targetId: string,
-  sourceId: string
-) => {
-  const shortestPathEdgeIds: string[] = [];
+  const visited = new Set<string>();
+  const stack = new Set<string>();
+  const toRemove = new Set<string>();
 
-  let currentId = targetId;
-
-  while (currentId !== sourceId && predecessor[currentId] !== null) {
-    const prevId = predecessor[currentId] || null;
-
-    const edge = edges.find(
-      (e) => e.source === prevId && e.target === currentId
-    );
-
-    if (edge) {
-      shortestPathEdgeIds.unshift(edge.id);
+  // DFS pour détecter les cycles
+  const dfs = (node: string, path: Edge[]) => {
+    if (stack.has(node)) {
+      // cycle trouvé
+      const cycleEdges = path.slice(path.findIndex(e => e.source === node));
+      if (cycleEdges.length > 0) {
+        // supprimer l’arête de poids minimum
+        const minEdge = cycleEdges.reduce((min, e) =>
+          parseInt(e.label) < parseInt(min.label) ? e : min
+        );
+        toRemove.add(minEdge.id);
+      }
+      return;
     }
 
-    currentId = prevId!;
-  }
+    if (visited.has(node)) return;
 
-  return shortestPathEdgeIds;
+    visited.add(node);
+    stack.add(node);
+
+    if (graph[node]) {
+      for (const edge of graph[node]) {
+        dfs(edge.target, [...path, edge]);
+      }
+    }
+
+    stack.delete(node);
+  };
+
+  // Lancer DFS depuis chaque nœud
+  Object.keys(graph).forEach(node => dfs(node, []));
+
+  // Retourner les arêtes restantes
+  return edges.filter(e => !toRemove.has(e.id));
 };
+
+

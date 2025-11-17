@@ -3,13 +3,57 @@ import { addEdge, applyNodeChanges, applyEdgeChanges } from "@xyflow/react";
 import { AppState } from "@/types/type";
 import { initialNodes } from "@/flows/nodes";
 import { initialEdges } from "@/flows/edges";
-;
-
 // this is our useStore hook that we can use in our components to get parts of the store and call actions
 const useStoreFlow = create<AppState>((set, get) => ({
   nodes: initialNodes,
   edges: initialEdges,
   isUpdate: false,
+  typeAlgo:"", 
+  setTypeAlgo : (type: string) => set({ typeAlgo: type }),
+
+  labelInputEdgeId: "",
+  setLabelInputEdgeId: (id: string) => set({ labelInputEdgeId: id }),
+
+  editingEdgeId: "", // Stocke l'ID de l'edge en cours d'édition
+  setEditingEdgeId: (edgeId) => set({ editingEdgeId: edgeId }),
+
+  setNodes: (nodes) => {
+    set({ nodes });
+  },
+  setEdges: (edges) => {
+    set({ edges });
+  },
+
+  onConnect: (connection) => {
+    const id = `xy-edge__${connection.source}-${connection.target}`;
+
+    const newEdge = {
+      ...connection,
+      id,
+      label: "",
+      type: "floating",
+    };
+
+    set({
+      edges: [...get().edges, newEdge],
+      labelInputEdgeId: id, // Active l’affichage de l’input
+    });
+
+    // set({
+    //   edges: addEdge(connection, get().edges),
+    // });
+  },
+
+  onNodesChange: (changes) => {
+    set({
+      nodes: applyNodeChanges(changes, get().nodes),
+    });
+  },
+  onEdgesChange: (changes) => {
+    set({
+      edges: applyEdgeChanges(changes, get().edges),
+    });
+  },
 
   // Fusionner nœuds et arêtes en fonction de la source
   nodeEdges: () => {
@@ -27,28 +71,6 @@ const useStoreFlow = create<AppState>((set, get) => ({
       get().nodes.find((node) => node.id === id) ||
       get().edges.find((eds) => eds.id === id)
     );
-  },
-
-  onNodesChange: (changes) => {
-    set({
-      nodes: applyNodeChanges(changes, get().nodes),
-    });
-  },
-  onEdgesChange: (changes) => {
-    set({
-      edges: applyEdgeChanges(changes, get().edges),
-    });
-  },
-  onConnect: (connection) => {
-    set({
-      edges: addEdge(connection, get().edges),
-    });
-  },
-  setNodes: (nodes) => {
-    set({ nodes });
-  },
-  setEdges: (edges) => {
-    set({ edges });
   },
 
   // ✅ Met à jour un nœud spécifique
@@ -73,14 +95,10 @@ const useStoreFlow = create<AppState>((set, get) => ({
     set((state) => ({
       edges: state.edges.map((edge) =>
         edgeIds.includes(edge.id)
-          ? { ...edge, animated , type: "pathaway"}
-          : { ...edge, animated: false , type: "floating"}
+          ? { ...edge, animated, type: "pathaway" }
+          : { ...edge, animated: false, type: "floating" }
       ),
     })),
-
-
-  editingEdgeId: "", // Stocke l'ID de l'edge en cours d'édition
-  setEditingEdgeId: (edgeId) => set({ editingEdgeId: edgeId }),
 }));
 
 export default useStoreFlow;

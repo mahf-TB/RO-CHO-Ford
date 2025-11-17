@@ -15,13 +15,24 @@ import {
   TableRowsSplitIcon,
 } from "lucide-react";
 import Dropdown, { DropdownItems } from "../utils/Dropdown";
-import { useState } from "react";
-import { bellmanFord, findShortestPathEdges } from "@/scripts/AlgorithmeFord";
+import {
+  bellmanFordMinimum,
+  findShortestPathEdges,
+} from "@/scripts/AlgorithmeFordMin";
+import { bellmanFordMaximum, removeCycles } from "@/scripts/AlgorithmeFordMax";
 
 const TopBar = () => {
-  const { nodes, edges, updateNode, updateEdgeType } = useStoreFlow();
-  const { sideOpen, setSideOpen, logOpen, setLogOpen, setResTable } = useSideStore();
-  const [typeAlgo, setTypeAlgo] = useState("");
+  const {
+    nodes,
+    edges,
+    typeAlgo,
+    setEdges,
+    updateNode,
+    updateEdgeType,
+    setTypeAlgo,
+  } = useStoreFlow();
+  const { sideOpen, setSideOpen, logOpen, setLogOpen, setResTable } =
+    useSideStore();
 
   const onDragStart = (event: any, nodeType: any) => {
     event.dataTransfer.setData("application/reactflow", nodeType);
@@ -35,7 +46,16 @@ const TopBar = () => {
 
   const handleMinimum = (e: any) => {
     e.preventDefault();
-    const resMini = bellmanFord(nodes, edges, "1");
+    let resMini = null;
+    if (typeAlgo === "Maximisation") {
+      const cleanedEdges = removeCycles(edges);
+      setEdges(cleanedEdges);
+      resMini = bellmanFordMaximum(nodes, cleanedEdges, "1");
+      console.log("📌 Résultat  : ", resMini);
+    } else {
+      resMini = bellmanFordMinimum(nodes, edges, "1");
+      console.log("📌 Résultat  : ", resMini);
+    }
 
     if (!resMini) {
       console.error("L'algorithme Bellman-Ford n'a pas retourné de résultat !");
@@ -57,9 +77,7 @@ const TopBar = () => {
     );
     console.log(shortPath);
     setLogOpen(true);
-
     updateEdgeType(shortPath, true);
-
     // afficher dansa le tableau le calcule resultat
     setResTable(resMini.results);
   };

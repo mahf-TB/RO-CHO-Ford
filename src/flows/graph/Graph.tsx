@@ -15,6 +15,7 @@ import { edgeTypes } from "../edges";
 
 import CustomConnectionLine from "./CustomConnectionLine";
 import useStoreFlow from "@/store/storeFlow";
+import InputEdgeLabel from "../edges/InputEdgeLabel";
 // import { updateNodesAndEdges } from ".";
 
 const connectionLineStyle = {
@@ -84,6 +85,7 @@ export default function Graph() {
         <MiniMap />
         <Controls />
       </ReactFlow>
+      <InputEdgeLabel />
     </div>
   );
 }

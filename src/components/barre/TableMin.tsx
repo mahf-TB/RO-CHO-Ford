@@ -1,4 +1,5 @@
 import useSideStore from "@/store/sideStore";
+import useStoreFlow from "@/store/storeFlow";
 import { useEffect, useRef } from "react";
 
 type RowsTableProps = {
@@ -11,6 +12,7 @@ type RowsTableProps = {
 
 const TableMin = () => {
   const { resTable } = useSideStore();
+  const { typeAlgo } = useStoreFlow();
   const tableBodyRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (tableBodyRef.current) {
@@ -54,16 +56,27 @@ const TableMin = () => {
                       </td>
                     </tr>
                   ) : (
-                    resTable.map((item, index) => (
-                      <RowsTable
-                        key={index}
-                        i={item.i}
-                        j={item.j}
-                        lambdaI={item.lambdaI}
-                        lambdaJ={item.lambdaJ}
-                        vArc={item.vArc}
-                      />
-                    ))
+                    resTable.map((item, index) =>
+                      typeAlgo === "Maximisation" ? (
+                        <RowsTableMax
+                          key={index}
+                          i={item.i}
+                          j={item.j}
+                          lambdaI={item.lambdaI}
+                          lambdaJ={item.lambdaJ}
+                          vArc={item.vArc}
+                        />
+                      ) : (
+                        <RowsTableMin
+                          key={index}
+                          i={item.i}
+                          j={item.j}
+                          lambdaI={item.lambdaI}
+                          lambdaJ={item.lambdaJ}
+                          vArc={item.vArc}
+                        />
+                      )
+                    )
                   )}
                   <tr>
                     <td colSpan={5} className="h-[80vh] bg-violet-50 ">
@@ -85,7 +98,7 @@ const TableMin = () => {
 
 export default TableMin;
 
-export const RowsTable: React.FC<RowsTableProps> = ({
+export const RowsTableMin: React.FC<RowsTableProps> = ({
   i,
   j,
   lambdaI,
@@ -111,6 +124,54 @@ export const RowsTable: React.FC<RowsTableProps> = ({
       <td className="px-4 py-2 border border-black text-center">{vArc}</td>
       <td className="px-4 py-2 border border-black">
         {lambdaJ - lambdaI > vArc ? (
+          <div className="flex items-center gap-2 ">
+            <span>
+              λ<sub>{j}</sub>
+            </span>
+            =
+            <span>
+              λ<sub>{i}</sub> + V(X<sub>{j}</sub>, X<sub>{i}</sub>)
+            </span>
+            =
+            <span>
+              {lambdaI} + {vArc}
+            </span>
+            =<span>{lambdaI + vArc}</span>
+          </div>
+        ) : (
+          "Aucun"
+        )}
+      </td>
+    </tr>
+  );
+};
+
+export const RowsTableMax: React.FC<RowsTableProps> = ({
+  i,
+  j,
+  lambdaI,
+  lambdaJ,
+  vArc,
+}) => {
+  return (
+    <tr className="text-gray-700 text-base">
+      <td className="px-4 py-2  border border-black text-center">{i}</td>
+      <td className="px-4 py-2  border border-black text-center">{j}</td>
+      <td className="px-4 py-2  border border-black">
+        <div className="flex items-center gap-2">
+          <span>
+            λ<sub>{j}</sub> - λ<sub>{i}</sub>
+          </span>
+          =
+          <span>
+            {lambdaJ} - {lambdaI}
+          </span>
+          = <span>{lambdaJ - lambdaI}</span>
+        </div>
+      </td>
+      <td className="px-4 py-2 border border-black text-center">{vArc}</td>
+      <td className="px-4 py-2 border border-black">
+        {lambdaJ - lambdaI < vArc ? (
           <div className="flex items-center gap-2 ">
             <span>
               λ<sub>{j}</sub>
